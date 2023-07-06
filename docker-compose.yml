@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+
+  web:
+    container_name: appmail-web
+    build:
+        context: .
+    image: appmail:config
+    ports:
+      - "8000:80"
+      - "8001:81"
+    volumes:
+      - .:/var/www/html
+    working_dir: /var/www/html
+
+  mailer:
+    container_name: appmail-mailer
+    image: schickling/mailcatcher
+    ports:
+      - "1025:1025"
+      - "1080:1080"
