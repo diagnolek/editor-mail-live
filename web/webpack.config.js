@@ -35,7 +35,7 @@ module.exports = function(env) {
         mode: prod ? 'production' : 'development',
 
         devServer: {
-            port: 81,
+            port: 8001,
             host: '0.0.0.0',
             hot: true,
             open: false,

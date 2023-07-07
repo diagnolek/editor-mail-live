@@ -9,7 +9,7 @@ services:
     image: appmail:config
     ports:
       - "8000:80"
-      - "8001:81"
+      - "8001:8001"
     volumes:
       - .:/var/www/html
     working_dir: /var/www/html

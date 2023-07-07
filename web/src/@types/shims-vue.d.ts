@@ -1,3 +1,3 @@
 type InitialData = {
-  URL_HOST: string,
+  HOST_URL: string,
 };
