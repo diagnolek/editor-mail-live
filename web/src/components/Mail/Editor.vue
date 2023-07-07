@@ -25,7 +25,7 @@
         </ul>
       </div>
       <div class="col-2">
-        <button class="btn btn-outline-dark btn-sm float-end" @click="cleanMail" ref="btnSendMail">clean</button>
+        <button class="btn btn-outline-dark btn-sm float-end" @click="clearMail" ref="btnSendMail">Clear</button>
       </div>
     </div>
     <div class="row">
@@ -72,10 +72,10 @@ export default {
       this.active[style] = !this.active[style];
       document.execCommand(style, false, null);
     },
-    cleanMail() {
+    clearMail() {
       this.$store.dispatch('editorClear');
       this.$refs.editor.innerHTML = this.$store.getters.getEditorText();
-      this.$emit('cleanMail');
+      this.$emit('clearMail');
     }
   }
 }

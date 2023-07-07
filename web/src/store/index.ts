@@ -7,6 +7,7 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
     state: {
         editor: {
+            subject: '',
             recipients: [],
             text: '',
         } as Editor
@@ -20,7 +21,10 @@ const store = new Vuex.Store({
         },
         SET_EDITOR_RECIPIENTS(state, payload: string[]) {
             state.editor.recipients = payload;
-        }
+        },
+        SET_EDITOR_SUBJECT(state, payload: string) {
+            state.editor.subject = payload;
+        },
     },
     actions: {
         editorFetch({commit}) {
@@ -35,6 +39,7 @@ const store = new Vuex.Store({
         },
         editorClear({commit}): void {
             commit('SET_EDITOR',{
+                subject: '',
                 recipients: [],
                 text: ''
             });
@@ -51,7 +56,12 @@ const store = new Vuex.Store({
             return (): string[] => {
                 return state.editor.recipients;
             }
-        }
+        },
+        getEditorSubject(state) {
+            return (): string => {
+                return state.editor.subject;
+            }
+        },
     }
 });
 

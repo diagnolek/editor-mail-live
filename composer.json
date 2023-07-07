@@ -1,5 +1,7 @@
 {
+    "name": "diagnolek/editor-mail-live",
     "type": "project",
+    "version": "1.0.0",
     "license": "proprietary",
     "minimum-stability": "stable",
     "prefer-stable": true,
@@ -11,8 +13,10 @@
         "symfony/dotenv": "6.3.*",
         "symfony/flex": "^2",
         "symfony/framework-bundle": "6.3.*",
+        "symfony/mailer": "6.3.*",
         "symfony/runtime": "6.3.*",
         "symfony/twig-bundle": "6.3.*",
+        "symfony/validator": "6.3.*",
         "symfony/yaml": "6.3.*",
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/twig": "^2.12|^3.0"

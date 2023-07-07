@@ -18,9 +18,17 @@
           </div>
         </div>
       </div>
+      <div class="row mt-4 mb-2">
+        <div class="col-12">
+          <div class="input-group">
+            <span class="input-group-text" id="basic-addon2">Subject:</span>
+            <input type="text" class="form-control" v-model="subject" aria-describedby="basic-addon2">
+          </div>
+        </div>
+      </div>
     </div>
     <div class="card-body">
-      <Editor @editorRefUpdated="handleEditorRef" @cleanMail="cleanMail"></Editor>
+      <Editor @editorRefUpdated="handleEditorRef" @clearMail="clearMail"></Editor>
     </div>
   </div>
 </template>
@@ -36,6 +44,7 @@ export default {
   },
   data() {
     return {
+      subject: '',
       recipients: '',
       editor: HTMLElement = null
     }
@@ -44,11 +53,16 @@ export default {
     this.$store.dispatch('editorFetch');
   },
   mounted() {
+    this.subject = this.$store.getters.getEditorSubject();
     this.recipients = this.$store.getters.getEditorRecipients().join(',');
   },
   watch: {
     recipients(val) {
       this.$store.commit('SET_EDITOR_RECIPIENTS', this.getRecipients());
+      this.$store.dispatch('editorPersist');
+    },
+    subject(val) {
+      this.$store.commit('SET_EDITOR_SUBJECT', val);
       this.$store.dispatch('editorPersist');
     }
   },
@@ -60,7 +74,7 @@ export default {
       return input.replace(/</g, '&lt;').replace(/>/g, '&gt;');
     },
     getUrl(path: string): string {
-      return (window as any).__INITIAL_DATA__.HOST_URL !== undefined ? (window as any).__INITIAL_DATA__.HOST_URL + path : path;
+      return (window as any).__INITIAL_DATA__ !== undefined ? (window as any).__INITIAL_DATA__.HOST_URL + path : path;
     },
     sending(status): void {
       const button = this.$refs.btnSendMail;
@@ -87,6 +101,10 @@ export default {
     validation(): void {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+      if (this.subject === '') {
+        throw new Error('Subject is empty');
+      }
+
       if (this.getContent() === '') {
         throw new Error('Text is empty');
       }
@@ -101,30 +119,48 @@ export default {
         }
       });
     },
-    cleanMail() {
+    clearMail() {
       this.$store.dispatch('editorFetch');
+      this.subject = this.$store.getters.getEditorSubject();
       this.recipients = this.$store.getters.getEditorRecipients().join(',');
     },
     async sentEmail() {
       try {
         this.validation();
         this.sending('start');
-        const response = await fetch(this.getUrl('/send-email'), {
+        await fetch(this.getUrl('/send-email'), {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({body: this.getContent(), recipients: this.getRecipients()})
-        });
-        const data = await response.json().finally(()=>{
+          body: JSON.stringify({
+            subject: this.subject,
+            body: this.getContent(),
+            recipients: this.getRecipients()
+          })
+        }).then((resp)=>{
+            resp.json().then((data)=>{
+              if (resp.status == 200) {
+                this.$notify({
+                  text: data.message,
+                  type: 'success'
+                });
+              } else {
+                this.$notify({
+                  text: data.message,
+                  type: 'error'
+                });
+              }
+            }).catch(()=>{
+              this.$notify({
+                text: 'process sending failed',
+                type: 'error'
+              });
+            });
+        }).finally(()=>{
           this.sending('stop');
-          this.$notify({
-            text: 'Emailing was successful',
-            type: 'success'
-          });
         });
-        console.log(data)
       } catch (error) {
         this.$notify({
           text: error.message,

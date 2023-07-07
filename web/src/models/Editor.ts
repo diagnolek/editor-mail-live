@@ -1,4 +1,5 @@
 interface Editor{
+    subject: string,
     recipients: string[]
     text: string
 }

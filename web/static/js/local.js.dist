@@ -1,0 +1,11 @@
+let configLocal = {
+    HOST_URL: 'http://localhost:8000'
+}
+
+if (typeof window == 'object') {
+    window.__INITIAL_DATA__ = configLocal
+}
+
+if (typeof module == 'object') {
+    module.exports = configLocal;
+}
