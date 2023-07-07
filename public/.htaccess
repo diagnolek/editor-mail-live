@@ -1,5 +1,5 @@
 <IfModule mod_rewrite.c>
 	RewriteEngine on
-	RewriteCond %{REQUEST_URI} !.(css|ico|jpg|js|png)$
+	RewriteCond %{REQUEST_URI} !.(css|ico|jpg|js|png|map)$
     RewriteRule ^(.+)$ index.php
 </IfModule>
