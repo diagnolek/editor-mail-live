@@ -7,7 +7,7 @@ Opis
 -------
 
 Edytor posiada możliwość prostej edycji tekstu (pogrubienie, kursywa, podkreślenie), oraz ma możliwość wpisania wielu adresów email.
-Aby wysłać email do wielu adresów należy wpisując do pola `To:` rozdzielając je przecinkiem.
+Aby wysłać email do wielu adresów należy wpisać do pola `To:` adresy email rozdzielając je przecinkiem.
 Edytor posiada walidatory takie jak:
 
 - To: poprawne adresy email
@@ -26,6 +26,13 @@ Uruchamianie środowiska
 `Edytor będzie dostępny pod adresem http://localhost:8000/`
 
 `Aplikacja do podglądu wysłanych maili http://localhost:1080/`
+
+Uruchamianie testów
+---------------
+
+- docker exec -ti appmail-web bash -c "cd /var/www/html && cp phpunit.xml.dist phpunit.xml && php bin/phpunit --testsuite=project_test"
+- docker exec -ti appmail-web bash -c "cd /var/www/html/web && npm run test"
+
 
 Wymagania
 ----------

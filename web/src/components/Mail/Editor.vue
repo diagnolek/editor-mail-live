@@ -5,17 +5,17 @@
         <ul class="editor-toolbar">
           <li>
             <div class='btn-group'>
-              <button class="btn btn-sm"
+              <button id="editor-btn-bold" class="btn btn-sm"
                       :class="{
                   'btn-outline-dark': active.bold == false,
                   'btn-dark': active.bold == true
                  }" @click="formatText('bold')"><b>Bold</b></button>
-              <button class="btn btn-sm"
+              <button id="editor-btn-italic" class="btn btn-sm"
                       :class="{
                   'btn-outline-dark': active.italic == false,
                   'btn-dark': active.italic == true
                  }" @click="formatText('italic')"><i>Italic</i></button>
-              <button class="btn btn-sm"
+              <button id="editor-btn-underline" class="btn btn-sm"
                       :class="{
                   'btn-outline-dark': active.underline == false,
                   'btn-dark': active.underline == true

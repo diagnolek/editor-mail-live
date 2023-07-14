@@ -1,7 +1,7 @@
 {
     "name": "diagnolek/editor-mail-live",
     "type": "project",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "license": "proprietary",
     "minimum-stability": "stable",
     "prefer-stable": true,
@@ -70,6 +70,10 @@
         }
     },
     "require-dev": {
-        "symfony/maker-bundle": "^1.49"
+        "phpunit/phpunit": "^9.5",
+        "symfony/browser-kit": "6.3.*",
+        "symfony/css-selector": "6.3.*",
+        "symfony/maker-bundle": "^1.49",
+        "symfony/phpunit-bridge": "^6.3"
     }
 }

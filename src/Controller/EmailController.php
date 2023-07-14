@@ -11,6 +11,7 @@ use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validation;
+use App\Model\Email as EditorEmail;
 
 class EmailController extends AbstractController
 {
@@ -20,37 +21,39 @@ class EmailController extends AbstractController
         return $this->render('email/index.html.twig');
     }
 
-    #[Route('/send-email', name: 'app_email_send')]
+    #[Route('/send-email', name: 'app_email_send', methods: 'POST')]
     public function sendEmail(Request $request, MailerInterface $mailer): Response
     {
         try {
 
             $validator = Validation::createValidator();
-            $data = $request->toArray();
+            $data = EditorEmail::build($request->toArray());
 
-            if ($validator->validate($data['recipients'], new Assert\All([
+            if ($validator->validate($data->recipients, new Assert\All([
                 new Assert\Email()]
             ))->count() > 0) {
                 throw new \InvalidArgumentException("Recipients invalid");
             }
 
-            if ($validator->validate($data['subject'], new Assert\Length(min: 5))->count() > 0) {
+            if ($validator->validate($data->subject, new Assert\Length(min: 5))->count() > 0) {
                 throw new \InvalidArgumentException("Subject is to short, 5 characters is the minimum");
             }
 
-            if ($validator->validate($data['body'], new Assert\Length(min: 5))->count() > 0) {
+            if ($validator->validate($data->body, new Assert\Length(min: 5))->count() > 0) {
                 throw new \InvalidArgumentException("Email is to short, 5 characters is the minimum");
             }
 
             $email = (new Email())
-                ->to(...$data['recipients'])
-                ->subject($data['subject'])
-                ->html($data['body']);
+                ->to(...$data->recipients)
+                ->subject($data->subject)
+                ->html($data->body);
 
             $mailer->send($email);
             return $this->json(['message' => 'Emailing was successful']);
 
-        } catch (TransportExceptionInterface | \InvalidArgumentException $ex) {
+        } catch (\InvalidArgumentException $ex) {
+            return $this->json(['message' => $ex->getMessage()], Response::HTTP_BAD_REQUEST);
+        } catch (TransportExceptionInterface $ex) {
             return $this->json(['message' => $ex->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
